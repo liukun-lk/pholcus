@@ -42,7 +42,7 @@ func (*LogView) LayoutFlags() walk.LayoutFlags {
 }
 
 func (*LogView) MinSizeHint() walk.Size {
-	return walk.Size{20, 12}
+	return walk.Size{100, 180}
 }
 
 func (*LogView) SizeHint() walk.Size {

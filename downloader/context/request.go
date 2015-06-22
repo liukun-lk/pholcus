@@ -2,8 +2,8 @@ package context
 
 import (
 	"github.com/bitly/go-simplejson"
-	"github.com/henrylee2cn/pholcus/reporter"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
 	"os"
@@ -12,111 +12,109 @@ import (
 
 // Request represents object waiting for being crawled.
 type Request struct {
-	url     string
-	referer string
-	rule    string
-	spider  string
+	Url     string
+	Referer string
+	Rule    string
+	Spider  string
 	// GET POST POST-M HEAD
-	method string
+	Method string
 	// http header
-	header http.Header
+	Header http.Header
 	// http cookies
-	cookies []*http.Cookie
+	Cookies []*http.Cookie
 	// POST values
-	postData url.Values
-	//在Spider中生成时，根据ruleTree.Outsource确定
-	canOutsource bool
-	//当经过Pholcus时，被指定是否外包
-	isOutsource bool
+	PostData url.Values
+	//是否支持外包（分布式），根据ruleTree.Outsource确定
+	Outsource bool
 	// Redirect function for downloader used in http.Client
 	// If CheckRedirect returns an error, the Client's Get
 	// method returns both the previous Response.
 	// If CheckRedirect returns error.New("normal"), the error process after client.Do will ignore the error.
-	checkRedirect func(req *http.Request, via []*http.Request) error
+	CheckRedirect func(req *http.Request, via []*http.Request) error
 
 	// 标记临时数据，通过temp[x]==nil判断是否有值存入，所以请存入带类型的值，如[]int(nil)等
-	temp map[string]interface{}
+	Temp map[string]interface{}
 
 	// 即将加入哪个优先级的队列当中
-	priority uint
+	Priority uint
 }
 
 // NewRequest returns initialized Request object.
 
 func NewRequest(param map[string]interface{}) *Request {
 	req := &Request{
-		url:    param["url"].(string),    //必填
-		rule:   param["rule"].(string),   //必填
-		spider: param["spider"].(string), //必填
+		Url:    param["url"].(string),    //必填
+		Rule:   param["rule"].(string),   //必填
+		Spider: param["spider"].(string), //必填
 	}
 
 	// 若有必填
 	switch v := param["referer"].(type) {
 	case string:
-		req.referer = v
+		req.Referer = v
 	default:
-		req.referer = ""
+		req.Referer = ""
 	}
 
 	switch v := param["method"].(type) {
 	case string:
-		req.method = v
+		req.Method = v
 	default:
-		req.method = "GET"
+		req.Method = "GET"
 	}
 
 	switch v := param["cookies"].(type) {
 	case []*http.Cookie:
-		req.cookies = v
+		req.Cookies = v
 	default:
-		req.cookies = nil
+		req.Cookies = nil
 	}
 
 	switch v := param["postData"].(type) {
 	case url.Values:
-		req.postData = v
+		req.PostData = v
 	default:
-		req.postData = nil
+		req.PostData = nil
 	}
 
-	switch v := param["canOutsource"].(type) {
+	switch v := param["outsource"].(type) {
 	case bool:
-		req.canOutsource = v
+		req.Outsource = v
 	default:
-		req.canOutsource = false
+		req.Outsource = false
 	}
 
 	switch v := param["checkRedirect"].(type) {
 	case func(*http.Request, []*http.Request) error:
-		req.checkRedirect = v
+		req.CheckRedirect = v
 	default:
-		req.checkRedirect = nil
+		req.CheckRedirect = nil
 	}
 
 	switch v := param["temp"].(type) {
 	case map[string]interface{}:
-		req.temp = v
+		req.Temp = v
 	default:
-		req.temp = map[string]interface{}{}
+		req.Temp = map[string]interface{}{}
 	}
 
 	switch v := param["priority"].(type) {
 	case uint:
-		req.priority = v
+		req.Priority = v
 	default:
-		req.priority = uint(0)
+		req.Priority = uint(0)
 	}
 
 	switch v := param["header"].(type) {
 	case string:
 		_, err := os.Stat(v)
 		if err == nil {
-			req.header = readHeaderFromFile(v)
+			req.Header = readHeaderFromFile(v)
 		}
 	case http.Header:
-		req.header = v
+		req.Header = v
 	default:
-		req.header = nil
+		req.Header = nil
 	}
 
 	return req
@@ -127,7 +125,7 @@ func readHeaderFromFile(headerFile string) http.Header {
 	b, err := ioutil.ReadFile(headerFile)
 	if err != nil {
 		//make be:  share access error
-		reporter.Log.Println(err.Error())
+		log.Println(err.Error())
 		return nil
 	}
 	js, _ := simplejson.NewJson(b)
@@ -156,100 +154,95 @@ func (self *Request) AddHeaderFile(headerFile string) *Request {
 		return self
 	}
 	h := readHeaderFromFile(headerFile)
-	self.header = h
+	self.Header = h
 	return self
 }
 
 func (self *Request) GetHeader() http.Header {
-	return self.header
+	return self.Header
 }
 
 func (self *Request) GetRedirectFunc() func(req *http.Request, via []*http.Request) error {
-	return self.checkRedirect
+	return self.CheckRedirect
 }
 
 func (self *Request) GetUrl() string {
-	return self.url
+	return self.Url
 }
 
 func (self *Request) SetUrl(url string) {
-	self.url = url
+	self.Url = url
 }
 
 func (self *Request) GetReferer() string {
-	return self.referer
+	return self.Referer
 }
 
 func (self *Request) SetReferer(referer string) {
-	self.referer = referer
+	self.Referer = referer
 }
 
 func (self *Request) GetRuleName() string {
-	return self.rule
+	return self.Rule
 }
 
 func (self *Request) SetRuleName(ruleName string) {
-	self.rule = ruleName
+	self.Rule = ruleName
 }
 
 func (self *Request) GetSpiderName() string {
-	return self.spider
+	return self.Spider
 }
 
 func (self *Request) GetMethod() string {
-	return strings.ToUpper(self.method)
+	return strings.ToUpper(self.Method)
 }
 
 func (self *Request) GetPostData() url.Values {
-	return self.postData
+	return self.PostData
 }
 
 func (self *Request) GetCookies() []*http.Cookie {
-	return self.cookies
+	return self.Cookies
 }
 
-func (self *Request) IsOutsource() bool {
-	return self.isOutsource
+func (self *Request) CanOutsource() bool {
+	return self.Outsource
 }
 
-func (self *Request) TryOutsource() bool {
-	if self.canOutsource {
-		self.isOutsource = true
-		return true
-	} else {
-		return false
-	}
+func (self *Request) SetOutsource(can bool) {
+	self.Outsource = can
 }
 
 func (self *Request) GetTemp(key string) interface{} {
-	return self.temp[key]
+	return self.Temp[key]
 }
 
 func (self *Request) GetTemps() map[string]interface{} {
-	return self.temp
+	return self.Temp
 }
 
 func (self *Request) SetTemp(key string, value interface{}) {
-	self.temp[key] = value
+	self.Temp[key] = value
 }
 
 func (self *Request) SetAllTemps(temp map[string]interface{}) {
-	self.temp = temp
+	self.Temp = temp
 }
 
 func (self *Request) GetSpiderId() (int, bool) {
-	value, ok := self.temp["__SPIDER_ID__"]
+	value, ok := self.Temp["__SPIDER_ID__"]
 	return value.(int), ok
 }
 
 func (self *Request) SetSpiderId(spiderId int) {
-	self.temp["__SPIDER_ID__"] = spiderId
+	self.Temp["__SPIDER_ID__"] = spiderId
 }
 
 func (self *Request) GetPriority() uint {
-	return self.priority
+	return self.Priority
 }
 
 func (self *Request) SetPriority(priority uint) {
-	self.priority = priority
+	self.Priority = priority
 }

@@ -15,12 +15,12 @@ type DockerQueue struct {
 }
 
 func NewDocker() []DataCell {
-	return make([]DataCell, 0, config.DOCKER_CAP)
+	return make([]DataCell, 0, config.Task.DockerCap)
 }
 
 func NewDockerQueue() *DockerQueue {
-	var queueCap uint = config.DOCKER_QUEUE_CAP
-	if config.DOCKER_QUEUE_CAP < 2 {
+	var queueCap uint = config.Task.DockerQueueCap
+	if config.Task.DockerQueueCap < 2 {
 		queueCap = 2
 	}
 

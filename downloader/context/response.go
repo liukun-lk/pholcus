@@ -2,7 +2,7 @@ package context
 
 import (
 	"github.com/PuerkitoBio/goquery"
-	"github.com/henrylee2cn/pholcus/reporter"
+	"log"
 	"net/http"
 	"strings"
 )
@@ -120,7 +120,7 @@ func (self *Response) InitDom() *goquery.Document {
 	var err error
 	self.dom, err = goquery.NewDocumentFromReader(r)
 	if err != nil {
-		reporter.Log.Println(err.Error())
+		log.Println(err.Error())
 		panic(err.Error())
 	}
 	return self.dom

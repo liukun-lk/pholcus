@@ -32,7 +32,7 @@ func NewCollector() *Collector {
 
 func (self *Collector) Init(sp *spider.Spider) {
 	self.Spider = sp
-	self.outType = config.OutType
+	self.outType = config.Task.OutType
 	self.DataChan = make(chan DataCell, config.DATA_CAP)
 	self.DockerQueue = NewDockerQueue()
 	self.ctrl = make(chan bool, 1)
@@ -94,7 +94,7 @@ func (self *Collector) dockerOne(data DataCell) {
 
 	self.Dockers[self.Curr] = append(self.Dockers[self.Curr], data)
 
-	if uint(len(self.Dockers[self.Curr])) >= config.DOCKER_CAP {
+	if uint(len(self.Dockers[self.Curr])) >= config.Task.DockerCap {
 		// curDocker存满后输出
 		self.goOutput(self.Curr)
 		// 更换一个空Docker用于curDocker

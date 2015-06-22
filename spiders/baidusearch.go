@@ -39,6 +39,7 @@ func init() {
 var BaiduSearch = &Spider{
 	Name:        "百度搜索",
 	Description: "百度搜索结果 [www.baidu.com]",
+	Keyword:     USE,
 	// Pausetime: [2]uint{uint(3000), uint(1000)},
 	// Optional: &Optional{},
 	RuleTree: &RuleTree{
@@ -57,7 +58,8 @@ var BaiduSearch = &Spider{
 							return []string{"http://www.baidu.com/s?ie=utf-8&wd=" + self.GetKeyword() + "&rn=50&pn=" + strconv.Itoa(50*i)}
 						},
 						map[string]interface{}{
-							"rule": aid["rule"].(string),
+							"rule":      aid["rule"],
+							"outsource": aid["outsource"],
 						},
 					)
 					return nil

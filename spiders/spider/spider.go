@@ -3,8 +3,13 @@ package spider
 
 import (
 	"github.com/henrylee2cn/pholcus/downloader/context"
-	"github.com/henrylee2cn/pholcus/pholcus"
+	"github.com/henrylee2cn/pholcus/scheduler"
 	// "github.com/henrylee2cn/pholcus/pholcus/status"
+)
+
+const (
+	// 如需使用Keyword，则用需用USE初始化
+	USE = " " //注意必须为空格
 )
 
 type Spider struct {
@@ -65,6 +70,10 @@ func (self *Spider) GetRules() map[string]*Rule {
 	return self.RuleTree.Nodes
 }
 
+func (self *Spider) SetPausetime(a, b uint) {
+	self.Pausetime = [2]uint{a, b}
+}
+
 // 根据响应流运行指定解析规则，不推荐在规则中使用
 func (self *Spider) GoRule(resp *context.Response) {
 	self.RuleTree.Nodes[resp.GetRuleName()].ParseFunc(self, resp)
@@ -108,7 +117,7 @@ func (self *Spider) BulkAddQueue(urls []string, param map[string]interface{}) {
 
 func (self *Spider) AddQueue(param map[string]interface{}) {
 	req := self.NewRequest(param)
-	pholcus.Self.Push(req)
+	scheduler.Sdl.Push(req)
 }
 
 // 生成请求

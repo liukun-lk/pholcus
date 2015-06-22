@@ -8,7 +8,7 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"github.com/henrylee2cn/pholcus/config"
-	"github.com/henrylee2cn/pholcus/reporter"
+	. "github.com/henrylee2cn/pholcus/reporter"
 	"os"
 	"strconv"
 	"strings"
@@ -19,7 +19,7 @@ import (
 func (self *Collector) excel(dataIndex int) {
 	defer func() {
 		if err := recover(); err != nil {
-			reporter.Log.Println(err)
+			Log.Println(err)
 		}
 	}()
 
@@ -81,7 +81,7 @@ func (self *Collector) excel(dataIndex int) {
 			}
 		}
 
-		reporter.Log.Printf("[任务：%v | 关键词：%v | 小类：%v] 输出 %v 条数据！！！\n", self.Spider.GetName(), self.Spider.GetKeyword(), Name, num)
+		// Log.Printf("[任务：%v | 关键词：%v | 小类：%v] 输出 %v 条数据！！！\n", self.Spider.GetName(), self.Spider.GetKeyword(), Name, num)
 
 	}
 
@@ -89,7 +89,7 @@ func (self *Collector) excel(dataIndex int) {
 	f2, err := os.Stat(folder2)
 	if err != nil || !f2.IsDir() {
 		if err := os.MkdirAll(folder2, 0777); err != nil {
-			reporter.Log.Printf("Error: %v\n", err)
+			Log.Printf("Error: %v\n", err)
 		}
 	}
 
@@ -97,7 +97,7 @@ func (self *Collector) excel(dataIndex int) {
 	err = file.Save(filename)
 
 	if err != nil {
-		reporter.Log.Println(err)
+		Log.Println(err)
 	}
 
 }
@@ -106,7 +106,7 @@ func (self *Collector) excel(dataIndex int) {
 func (self *Collector) csv(dataIndex int) {
 	defer func() {
 		if err := recover(); err != nil {
-			reporter.Log.Println(err)
+			Log.Println(err)
 		}
 	}()
 
@@ -120,7 +120,7 @@ func (self *Collector) csv(dataIndex int) {
 	f2, err := os.Stat(folder2)
 	if err != nil || !f2.IsDir() {
 		if err := os.MkdirAll(folder2, 0777); err != nil {
-			reporter.Log.Printf("Error: %v\n", err)
+			Log.Printf("Error: %v\n", err)
 		}
 	}
 
@@ -134,7 +134,7 @@ func (self *Collector) csv(dataIndex int) {
 		file, err := os.Create(filenameBase + " (" + Name + ").csv")
 
 		if err != nil {
-			reporter.Log.Println(err)
+			Log.Println(err)
 			continue
 		}
 
@@ -171,7 +171,7 @@ func (self *Collector) csv(dataIndex int) {
 		// 关闭文件
 		file.Close()
 		// 输出报告
-		reporter.Log.Printf("[任务：%v | 关键词：%v | 小类：%v] 输出 %v 条数据！！！\n", self.Spider.GetName(), self.Spider.GetKeyword(), Name, num)
+		// Log.Printf("[任务：%v | 关键词：%v | 小类：%v] 输出 %v 条数据！！！\n", self.Spider.GetName(), self.Spider.GetKeyword(), Name, num)
 	}
 }
 

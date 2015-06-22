@@ -86,7 +86,7 @@ var AlibabaProduct = &Spider{
 					total1 = strings.Trim(total1, " \t\n")
 					total, _ := strconv.Atoi(total1)
 					if total > self.MaxPage {
-						// total = self.MaxPage
+						total = self.MaxPage
 					} else if total == 0 {
 						reporter.Log.Printf("[消息提示：| 任务：%v | 关键词：%v | 规则：%v] 没有抓取到任何数据！！！\n", self.GetName(), self.GetKeyword(), resp.GetRuleName())
 						return

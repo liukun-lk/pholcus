@@ -3,6 +3,8 @@ package scheduler
 import (
 	"github.com/henrylee2cn/pholcus/common/deduplicate"
 	"github.com/henrylee2cn/pholcus/downloader/context"
+	// "github.com/henrylee2cn/pholcus/pholcus"
+	"sync"
 )
 
 const (
@@ -13,15 +15,34 @@ const (
 type Scheduler interface {
 	// 采集非重复url并返回对比结果，重复为true
 	Compare(string) bool
-	SrcManager
 	Stop()
 	IsStop() bool
+	SrcManager
+	// // 存入
+	// Push(*context.Request)
+	// // 取出
+	// Use(int) *context.Request
+	// // 释放一个资源
+	// Free()
+	// // 资源队列是否闲置
+	// IsEmpty(int) bool
+	// IsAllEmpty() bool
+
+	// // 情况全部队列
+	// ClearAll()
 }
 
 type scheduler struct {
 	*SrcManage
 	*deduplicate.Deduplication
 	status int
+}
+
+// 定义全局调度
+var Sdl Scheduler
+
+func Init(capacity uint) {
+	Sdl = New(capacity)
 }
 
 func New(capacity uint) Scheduler {
@@ -32,7 +53,15 @@ func New(capacity uint) Scheduler {
 	}
 }
 
+var pushMutex sync.Mutex
+
+// 添加请求到队列
 func (self *scheduler) Push(req *context.Request) {
+	pushMutex.Lock()
+	defer func() {
+		pushMutex.Unlock()
+	}()
+
 	if self.status == STOP {
 		return
 	}
@@ -41,6 +70,12 @@ func (self *scheduler) Push(req *context.Request) {
 	if is {
 		return
 	}
+
+	// 留作未来分发请求用
+	// if pholcus.Self.GetRunMode() == config.SERVER || req.CanOutsource() {
+	// 	return
+	// }
+
 	self.SrcManage.Push(req)
 }
 
@@ -65,11 +100,4 @@ func (self *scheduler) IsStop() bool {
 		return true
 	}
 	return false
-}
-
-// 定义全局调度
-var Sdl Scheduler
-
-func Init(capacity uint) {
-	Sdl = New(capacity)
 }

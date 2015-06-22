@@ -6,9 +6,9 @@ import (
 	"github.com/henrylee2cn/pholcus/downloader"
 	"github.com/henrylee2cn/pholcus/downloader/context"
 	"github.com/henrylee2cn/pholcus/pipeline"
-	"github.com/henrylee2cn/pholcus/reporter"
 	"github.com/henrylee2cn/pholcus/scheduler"
 	"github.com/henrylee2cn/pholcus/spiders/spider"
+	"log"
 	"math/rand"
 	"sync"
 	"time"
@@ -51,10 +51,10 @@ func (self *crawler) Start() {
 	// 开始运行
 	self.Spider.Start(self.Spider)
 	self.Run()
-	// reporter.Log.Printf("**************爬虫：%v***********", self.GetId())
+	// log.Printf("**************爬虫：%v***********", self.GetId())
 	// 通知输出模块输出未输出的数据
 	self.Pipeline.CtrlR()
-	// reporter.Log.Println("**************断点 11 ***********")
+	// log.Println("**************断点 11 ***********")
 }
 
 func (self *crawler) Run() {
@@ -65,7 +65,7 @@ func (self *crawler) Run() {
 		// 队列退出及空请求调控
 		if req == nil {
 			if self.canStop() {
-				// reporter.Log.Println("**************退出队列************")
+				// log.Println("**************退出队列************")
 				break
 			} else {
 				time.Sleep(500 * time.Millisecond)
@@ -84,7 +84,7 @@ func (self *crawler) Run() {
 				self.FreeOne()
 				self.RequestOut()
 			}()
-			reporter.Log.Println("start crawl :", req.GetUrl())
+			log.Println("start crawl :", req.GetUrl())
 			self.Process(req)
 		}(req)
 	}
@@ -96,26 +96,26 @@ func (self *crawler) Process(req *context.Request) {
 	defer func() {
 		if err := recover(); err != nil { // do not affect other
 			if strerr, ok := err.(string); ok {
-				reporter.Log.Println(strerr)
+				log.Println(strerr)
 			} else {
-				reporter.Log.Println("Process error：", err)
+				log.Println("Process error：", err)
 			}
 		}
 	}()
-	// reporter.Log.Println("**************断点 1 ***********")
+	// log.Println("**************断点 1 ***********")
 	// download page
 	resp := self.Downloader.Download(req)
 
-	// reporter.Log.Println("**************断点 2 ***********")
+	// log.Println("**************断点 2 ***********")
 	if !resp.IsSucc() { // if fail do not need process
-		reporter.Log.Println(resp.Errormsg())
+		log.Println(resp.Errormsg())
 		return
 	}
 
-	// reporter.Log.Println("**************断点 3 ***********")
+	// log.Println("**************断点 3 ***********")
 	// 过程处理，提炼数据
 	self.Spider.GoRule(resp)
-	// reporter.Log.Println("**************断点 5 ***********")
+	// log.Println("**************断点 5 ***********")
 	// 该条请求结果存入pipeline
 	datas := resp.GetItems()
 	for i, count := 0, len(datas); i < count; i++ {
@@ -127,7 +127,7 @@ func (self *crawler) Process(req *context.Request) {
 			time.Now().Format("2006-01-02 15:04:05"),
 		)
 	}
-	// reporter.Log.Println("**************断点 end ***********")
+	// log.Println("**************断点 end ***********")
 }
 
 // 常用基础方法
@@ -162,7 +162,7 @@ func (self *crawler) RequestOut() {
 
 //判断调度中是否还有属于自己的资源运行
 func (self *crawler) canStop() bool {
-	// reporter.Log.Println("**************", self.srcManage[0], self.srcManage[1], "***********")
+	// log.Println("**************", self.srcManage[0], self.srcManage[1], "***********")
 	return (self.srcManage[0] == self.srcManage[1] && scheduler.Sdl.IsEmpty(self.Spider.GetId())) || scheduler.Sdl.IsStop()
 }
 
