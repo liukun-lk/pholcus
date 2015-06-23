@@ -2,7 +2,7 @@
 
 Pholcus（幽灵蛛）是一款纯Go语言编写的重量级爬虫软件，清新的GUI界面，优雅的爬虫规则、可控的高并发、任意的批量任务、多种输出方式、大量Demo，支持横纵向两种抓取模式，支持模拟登录和任务取消等，并且考虑了支持分布式布局。
 
-![image](https://github.com/henrylee2cn/pholcus/blob/master/doc/icon.png)
+![image](https://github.com/henrylee2cn/pholcus/blob/developer/doc/icon.png)
 
 * Latest Release: [Version 0.31 (dev) (Jun 22, 2015)](https://github.com/henrylee2cn/pholcus/releases).
 
@@ -10,7 +10,7 @@ Pholcus（幽灵蛛）是一款纯Go语言编写的重量级爬虫软件，清�
 
 #### 框架模块
 
-![image](https://github.com/henrylee2cn/pholcus/blob/master/doc/project.png)
+![image](https://github.com/henrylee2cn/pholcus/blob/developer/doc/project.png)
 
 
 #### 框架特点
@@ -51,13 +51,13 @@ go build -ldflags="-H windowsgui"
 
 #### 添加ICON
 
-![image](https://github.com/henrylee2cn/pholcus/blob/master/doc/addicon.jpg)
+![image](https://github.com/henrylee2cn/pholcus/blob/developer/doc/addicon.jpg)
 
 
 
 #### 添加规则
 
- - 添加一条规则的方法：只需在“henrylee2cn/pholcus/spiders/”中增加一个采集规则（go文件），框架将自动添加该规则到GUI任务列表！
+ - 添加一条规则的方法：只需在“henrylee2cn/pholcus/spider/spiders/”中增加一个采集规则（go文件），框架将自动添加该规则到GUI任务列表！
 
 
 
@@ -81,4 +81,4 @@ go get "golang.org/x/net/html/charset"
 
 #### 开源协议
 
-Pholcus（幽灵蛛）项目采用商业应用友好的[Apache License v2](https://github.com/henrylee2cn/pholcus/blob/master/doc/license.txt).发布
+Pholcus（幽灵蛛）项目采用商业应用友好的[Apache License v2](https://github.com/henrylee2cn/pholcus/blob/developer/doc/license.txt).发布
