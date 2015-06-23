@@ -4,7 +4,7 @@
 package main
 
 import (
-	"github.com/henrylee2cn/pholcus/pholcus/gui"
+	"github.com/henrylee2cn/pholcus/gui"
 )
 
 func main() {

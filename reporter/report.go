@@ -3,8 +3,8 @@ package reporter
 
 import (
 	"fmt"
-	"github.com/henrylee2cn/pholcus/config"
-	"github.com/henrylee2cn/pholcus/pholcus/node"
+	"github.com/henrylee2cn/pholcus/runtime/cache"
+	"github.com/henrylee2cn/pholcus/runtime/status"
 	"log"
 )
 
@@ -19,15 +19,15 @@ func init() {
 }
 
 func (self *Report) send(str string) {
-	if node.Self.GetRunMode() != config.OFFLINE {
+	if cache.Task.RunMode != status.OFFLINE {
 		go func() {
-			node.Self.NewDataSend(config.LOG, str, "")
+			cache.PushNetData(status.LOG, str, "")
 		}()
 	}
 }
 
 func (self *Report) Printf(format string, v ...interface{}) {
-	if self.status == config.STOP {
+	if self.status == status.STOP {
 		return
 	}
 	log.Printf(format, v...)
@@ -35,7 +35,7 @@ func (self *Report) Printf(format string, v ...interface{}) {
 }
 
 func (self *Report) Println(v ...interface{}) {
-	if self.status == config.STOP {
+	if self.status == status.STOP {
 		return
 	}
 	log.Println(v...)
@@ -43,7 +43,7 @@ func (self *Report) Println(v ...interface{}) {
 }
 
 func (self *Report) Fatal(v ...interface{}) {
-	if self.status == config.STOP {
+	if self.status == status.STOP {
 		return
 	}
 	self.send(fmt.Sprintln(v...))
@@ -51,9 +51,9 @@ func (self *Report) Fatal(v ...interface{}) {
 }
 
 func (self *Report) Stop() {
-	self.status = config.STOP
+	self.status = status.STOP
 }
 
 func (self *Report) Run() {
-	self.status = config.RUN
+	self.status = status.RUN
 }
