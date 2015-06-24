@@ -55,16 +55,16 @@ func (self *Network) serverHandle(conn *Conn) {
 		read_len, err := conn.Read(request)
 		if err != nil {
 			log.Println(err)
-			break
+			continue
 		}
 
 		if read_len == 0 {
-			break // connection already closed by client
+			continue // connection already closed by client
 		}
 
 		data, err := unmarshal(request[:read_len])
 		if err != nil {
-			break
+			continue
 		}
 
 		self.serveReceive(data)
