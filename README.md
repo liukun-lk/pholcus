@@ -1,12 +1,12 @@
 ## pholcus
 
-Pholcus（幽灵蛛）是一款纯Go语言编写的重量级爬虫软件，清新的GUI界面，优雅的爬虫规则、可控的高并发、任意的批量任务、多种输出方式、大量Demo，支持横纵向两种抓取模式，支持模拟登录和任务取消等，并且考虑了支持分布式布局。
+Pholcus（幽灵蛛）是一款纯Go语言编写的重量级爬虫软件，清新的GUI界面，优雅的爬虫规则、可控的高并发、任意的批量任务、多种输出方式、大量Demo，更重要的是它支持socket长连接、全双工并发分布式，支持横纵向两种抓取模式，支持模拟登录和任务取消等。
 
 ![image](https://github.com/henrylee2cn/pholcus/blob/master/doc/icon.png)
 
-* 稳定版： [Version 0.2.6 (Jun 17, 2015)](https://github.com/henrylee2cn/pholcus/releases).   [此处进入](https://github.com/henrylee2cn/pholcus/tree/master)
+* 稳定版： [Version 0.4.0 (Jun 27, 2015)](https://github.com/henrylee2cn/pholcus/releases).   [此处进入](https://github.com/henrylee2cn/pholcus/tree/master)
 
-* 开发版： [Version 0.3.1 (Jun 23, 2015)](https://github.com/henrylee2cn/pholcus/releases).   [此处进入](https://github.com/henrylee2cn/pholcus/tree/developer)
+* 开发版： [Version 0.4.0 (Jun 27, 2015)](https://github.com/henrylee2cn/pholcus/releases).   [此处进入](https://github.com/henrylee2cn/pholcus/tree/developer)
 
 * 官方QQ群：Go大数据 42731170    [![Go大数据群](http://pub.idqqimg.com/wpa/images/group.png)](http://shang.qq.com/wpa/qunwpa?idkey=83ee3e1a4be6bdb2b08a51a044c06ae52cf10a082f7c5cf6b36c1f78e8b03589)
 
@@ -29,7 +29,10 @@ Pholcus（幽灵蛛）是一款纯Go语言编写的重量级爬虫软件，清�
 #### GUI界面
 随时改进中，该截图仅供参考！
 
-![image](https://github.com/henrylee2cn/pholcus/blob/master/doc/guishow.jpg)
+![image](https://github.com/henrylee2cn/pholcus/blob/master/doc/guishow_0.jpg)
+![image](https://github.com/henrylee2cn/pholcus/blob/master/doc/guishow_1.jpg)
+![image](https://github.com/henrylee2cn/pholcus/blob/master/doc/guishow_2.jpg)
+![image](https://github.com/henrylee2cn/pholcus/blob/master/doc/guishow_3.jpg)
 
 
 #### 初次安装
@@ -58,7 +61,7 @@ go build -ldflags="-H windowsgui"
 
 #### 添加规则
 
- - 添加一条规则的方法：只需在“henrylee2cn/pholcus/spiders/”中增加一个采集规则（go文件），框架将自动添加该规则到GUI任务列表！
+ - 添加一条规则的方法：只需在“henrylee2cn/pholcus/spider/spiders/”中增加一个采集规则（go文件），框架将自动添加该规则到GUI任务列表！
 
 
 
@@ -70,6 +73,7 @@ go get "github.com/lxn/walk"
 go get "github.com/lxn/win"
 go get "github.com/PuerkitoBio/goquery"
 go get "github.com/henrylee2cn/surfer"
+go get "github.com/henrylee2cn/teleport"
 go get "github.com/bitly/go-simplejson"
 go get "github.com/tealeg/xlsx"
 go get "gopkg.in/mgo.v2"
